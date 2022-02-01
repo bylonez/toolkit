@@ -5,7 +5,8 @@ import (
 	"encoding/csv"
 	"fmt"
 	"github.com/andlabs/ui"
-	"github.com/tealeg/xlsx"
+	"github.com/xuri/excelize/v2"
+
 	"io"
 	"os"
 	"strings"
@@ -18,30 +19,32 @@ func convert(source, target string) {
 	if err != nil {
 		return
 	}
+	defer f.Close()
 	r := csv.NewReader(bufio.NewReader(f))
-	file := xlsx.NewFile()
-	sheet, err := file.AddSheet("Sheet1")
-	if err != nil {
-		fmt.Printf(err.Error())
-	}
-
+	excel := excelize.NewFile()
+	sheetName := "Sheet1"
+	excel.SetActiveSheet(excel.NewSheet(sheetName))
+	lineNum := 1
 	for {
-		record, err := r.Read()
+		record_line, err := r.Read()
 		// Stop at EOF.
 		if err == io.EOF {
 			break
 		}
-		row := sheet.AddRow()
-
-		for _, value := range record {
-			cell := row.AddCell()
-			cell.Value = value
+		for columnNum, value := range record_line {
+			axis, err := excelize.CoordinatesToCellName(columnNum+1, lineNum)
+			if err != nil {
+				fmt.Println(err)
+			}
+			err = excel.SetCellValue(sheetName, axis, value)
+			if err != nil {
+				return
+			}
 		}
+		lineNum += 1
 	}
-
-	err = file.Save(target)
-	if err != nil {
-		fmt.Printf(err.Error())
+	if err := excel.SaveAs(target); err != nil {
+		fmt.Println(err)
 	}
 }
 
@@ -86,12 +89,6 @@ func setupUI() {
 
 	tab.Append("csv->xlsx", makeConvertPage())
 	tab.SetMargined(0, true)
-	//
-	//tab.Append("Numbers and Lists", makeNumbersPage())
-	//tab.SetMargined(1, true)
-	//
-	//tab.Append("Data Choosers", makeDataChoosersPage())
-	//tab.SetMargined(2, true)
 
 	mainwin.Show()
 }
