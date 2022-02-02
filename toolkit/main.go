@@ -79,11 +79,10 @@ func makeConvertPage() ui.Control {
 
 	hbox := ui.NewHorizontalBox()
 	hbox.SetPadded(true)
-	box.Append(hbox, false)
-
 	hbox.Append(ui.NewLabel("Drop file path below or click Open File button"), true)
 	hbox.Append(openFileButton, false)
 
+	box.Append(hbox, false)
 	box.Append(input, false)
 	box.Append(button, false)
 	box.Append(resultMsg, false)
@@ -100,7 +99,6 @@ func setupUI() {
 		mainwin.Destroy()
 		return true
 	})
-
 	mainwin.SetChild(makeConvertPage())
 	mainwin.SetMargined(true)
 	mainwin.Show()
