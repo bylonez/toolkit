@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"encoding/csv"
-	"fmt"
 	"github.com/andlabs/ui"
 	"github.com/xuri/excelize/v2"
 
@@ -34,7 +33,7 @@ func convert(source, target string) {
 		for columnNum, value := range record_line {
 			axis, err := excelize.CoordinatesToCellName(columnNum+1, lineNum)
 			if err != nil {
-				fmt.Println(err)
+				return
 			}
 			err = excel.SetCellValue(sheetName, axis, value)
 			if err != nil {
@@ -44,7 +43,7 @@ func convert(source, target string) {
 		lineNum += 1
 	}
 	if err := excel.SaveAs(target); err != nil {
-		fmt.Println(err)
+		return
 	}
 }
 
