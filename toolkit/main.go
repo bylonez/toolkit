@@ -63,9 +63,29 @@ func makeConvertPage() ui.Control {
 		convert(source, target)
 		resultMsg.SetText("convert to:" + target + ", finish!")
 	})
+	openFileButton := ui.NewButton("Open File")
+	openFileButton.OnClicked(func(*ui.Button) {
+		filename := ui.OpenFile(mainwin)
+		if filename != "" {
+			if strings.HasSuffix(filename, ".csv") {
+				input.SetText(filename)
+			} else {
+				ui.MsgBoxError(mainwin,
+					"This message box describes an error.",
+					"More detailed information can be shown here.")
+			}
+		}
+	})
 	box := ui.NewVerticalBox()
 	box.SetPadded(true)
-	box.Append(ui.NewLabel("Drop file path below"), false)
+
+	hbox := ui.NewHorizontalBox()
+	hbox.SetPadded(true)
+	box.Append(hbox, false)
+
+	hbox.Append(ui.NewLabel("Drop file path below"), true)
+	hbox.Append(openFileButton, false)
+
 	box.Append(input, false)
 	box.Append(button, false)
 	box.Append(resultMsg, false)
@@ -73,7 +93,7 @@ func makeConvertPage() ui.Control {
 }
 
 func setupUI() {
-	mainwin = ui.NewWindow("ToolKit", 640, 480, false)
+	mainwin = ui.NewWindow("ToolKit", 500, 400, false)
 	mainwin.OnClosing(func(*ui.Window) bool {
 		ui.Quit()
 		return true
