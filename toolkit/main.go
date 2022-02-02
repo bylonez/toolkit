@@ -50,7 +50,6 @@ func makeConvertPage() ui.Control {
 	input := ui.NewMultilineEntry()
 	button := ui.NewButton("Convert")
 	resultMsg := ui.NewLabel("")
-
 	button.OnClicked(func(*ui.Button) {
 		source := input.Text()
 		target := strings.Replace(source, "csv", "xlsx", 1)
