@@ -71,8 +71,8 @@ func makeConvertPage() ui.Control {
 				input.SetText(filename)
 			} else {
 				ui.MsgBoxError(mainwin,
-					"This message box describes an error.",
-					"More detailed information can be shown here.")
+					"ERROR",
+					"please select file end with .csv")
 			}
 		}
 	})
@@ -83,7 +83,7 @@ func makeConvertPage() ui.Control {
 	hbox.SetPadded(true)
 	box.Append(hbox, false)
 
-	hbox.Append(ui.NewLabel("Drop file path below"), true)
+	hbox.Append(ui.NewLabel("Drop file path below or click Open File button"), true)
 	hbox.Append(openFileButton, false)
 
 	box.Append(input, false)
@@ -103,13 +103,8 @@ func setupUI() {
 		return true
 	})
 
-	tab := ui.NewTab()
-	mainwin.SetChild(tab)
+	mainwin.SetChild(makeConvertPage())
 	mainwin.SetMargined(true)
-
-	tab.Append("csv->xlsx", makeConvertPage())
-	tab.SetMargined(0, true)
-
 	mainwin.Show()
 }
 
